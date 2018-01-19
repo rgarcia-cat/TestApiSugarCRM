@@ -18,6 +18,8 @@
 
      'select_fields' => array(
           'id',
+          'name',
+          'importe',
      ),
 
      'link_name_to_fields_array' => array(
