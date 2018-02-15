@@ -1,14 +1,30 @@
 # TestApiSugarCRM
-Test en la utilització de la Api de SugarCRM
+Construint un Objecte per fer les crides API a sinergiaCRM, necessaries per treballar.
 
-Executar:
+Creant un entorn de testing.
 
-php get_entry_email.php
+## Requeriments
 
-php get_entry_redk_Pagos.php
+* composer: https://getcomposer.org/
 
-Per executar, cal modificar el fitxer config-exampe.php i desar-lo com a config.php.
 
-Cal introduir les dades per fer el login i la url del servidor.
+## Install
 
-Respecte els fitxers get_entry_email.php i get_entry_redk_Pagos.php, cal introduir un id de registre.
+```php
+composer install
+```
+
+## Configure
+
+Copiar el fitxer de config-example.php a config.php i posar les dades necessaries.
+
+```php
+cp src/config-example.php src/config.php
+vi src/config.php
+```
+
+## Execute test
+
+```php
+./vendor/phpunit/phpunit/phpunit test
+```
