@@ -64,6 +64,70 @@ class RestSinergiaCRM
       return ($contact);
 
   }
+  public function updateContact($objContact, $fields)  
+  {
+    //Podem passar el Object resultant de getContact -> (array)
+    //A triar: 
+    //     Actualitzem tots els camps del objecte i per tant, no cal passar el llistat de camps a modificar.
+    //     o
+    //     També passem d alguna forma els camps a modificar.
+    //
+    //Crec que es mes eficient agafar els camps a modificar nomes. pero potser interesa mes laltre opcio.
+    
+      print_r($objContact['id']);
+      
+      // Not Login yet.
+      if ($this->session_id == null) {
+        return (array('status'=>'no_login'));
+      }
+      $set_entry_fields = array(
+        'session' => $this->session_id,
+        'module_name' => $this->modul_contact,
+        'name_value_list' => array(
+          //required
+          array("name" => "id", "value" => $objContact['id']),
+          //optional
+          array("name" => "first_name", "value" => "Test Contact Api"),
+          array("name" => "last_name", "value" => "TESTTEST_modify"),
+          //array("name" => "comentarios_c", "value" => "test"),
+          //...
+      ),
+      );
+
+      $result = $this->call("set_entry", $set_entry_fields);
+      //print_r($result);
+      
+  }
+  public function getContactWithPayment($id)
+  {
+      // Not Login yet.
+      if ($this->session_id == null) {
+        return (array('status'=>'no_login'));
+      }
+      $get_entry_fields = array(
+         'session' =>  $this->session_id,
+         'module_name' => $this->modul_pagaments,
+         'id' => $id,
+         'select_fields' => array(
+              'id'
+          ),
+         'link_name_to_fields_array' => array(
+              array(
+                    'name' => 'redk_pagos_contacts',
+                    'value' => array(
+                        'id'
+                    ),
+              ),
+          ),
+      );
+      $result = $this->call("get_entry", $get_entry_fields);
+      
+      // not exist?      //Manera de fer-ho diferent?
+      $idContact = $result->relationship_list[0][0]->records[0]->id->value;
+      
+      return $this->getContact($idContact);
+
+  }
   public function getPagament($id)
   {
       // Not Login yet.
