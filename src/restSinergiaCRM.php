@@ -31,9 +31,12 @@ class RestSinergiaCRM
 
       $login_result = $this->call("login", $login_parameters);
       // Posar un missatge en cas d'error.
-
-      $this->session_id = $login_result->id;
-      return($login_result);
+      if (isset($login_result->id)) {
+        $this->session_id = $login_result->id;
+        return(true);
+      } else {
+        return(false);
+      }
   }
   public function convertObject ($o){
       $ret = array();
@@ -64,18 +67,18 @@ class RestSinergiaCRM
       return ($contact);
 
   }
-  public function updateContact($objContact, $fields)  
+  public function updateContact($objContact, $fields)
   {
     //Podem passar el Object resultant de getContact -> (array)
-    //A triar: 
+    //A triar:
     //     Actualitzem tots els camps del objecte i per tant, no cal passar el llistat de camps a modificar.
     //     o
     //     També passem d alguna forma els camps a modificar.
     //
     //Crec que es mes eficient agafar els camps a modificar nomes. pero potser interesa mes laltre opcio.
-    
+
       print_r($objContact['id']);
-      
+
       // Not Login yet.
       if ($this->session_id == null) {
         return (array('status'=>'no_login'));
@@ -96,7 +99,7 @@ class RestSinergiaCRM
 
       $result = $this->call("set_entry", $set_entry_fields);
       //print_r($result);
-      
+
   }
   public function getContactWithPayment($id)
   {
@@ -121,10 +124,10 @@ class RestSinergiaCRM
           ),
       );
       $result = $this->call("get_entry", $get_entry_fields);
-      
+
       // not exist?      //Manera de fer-ho diferent?
       $idContact = $result->relationship_list[0][0]->records[0]->id->value;
-      
+
       return $this->getContact($idContact);
 
   }
@@ -153,7 +156,7 @@ class RestSinergiaCRM
 
   public function call($method, $parameters)
   {
-    
+
       ob_start();
       $curl_request = curl_init();
 

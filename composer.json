@@ -1,0 +1,12 @@
+{
+    "name": "omnium/rest-sinergia-crm",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    },
+    "authors": [
+        {
+            "name": "agusti",
+            "email": "agusti@gmail.com"
+        }
+    ]
+}
