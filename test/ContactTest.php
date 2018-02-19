@@ -55,6 +55,30 @@ class ContactTest extends TestCase
     $contact = $this->restSCRM->getContact($id);
     $this->assertEquals($error_message, $contact['status']);
   }
+// Create New - Update - Delete Contact
+  public function testCreateUpdateDeleteContact(){
+    $fields = array("first_name" => "Test", "last_name" => "Cognom1 Cognom2");
+    $fields_update = array("email1" => "test@omnium.cat");
+    $contact = $this->restSCRM->createContact($fields);
+    $this->assertObjectHasAttribute('id', $contact);
+    if (isset($contact->id)){
+      $updateC = $this->restSCRM->updateContact($contact->id,$fields_update);
+      $this->assertObjectHasAttribute('email1', $updateC->entry_list);
+      $this->assertEquals($fields_update['email1'], $updateC->entry_list->email1->value);
+      if (isset($updateC->entry_list) && isset($updateC->entry_list->email1->value)){
+        $this->assertTrue($this->restSCRM->deleteContact($contact->id));
+      } else {
+          $this->markTestIncomplete('Update Error.');
+      }
+    } else {
+      $this->markTestIncomplete('Create Error.');
+    }
+  }
 
- 
+
+// Update Existent Contact
+
+// Delete Contact
+
+
 }
