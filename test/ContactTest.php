@@ -59,6 +59,8 @@ class ContactTest extends TestCase
   public function testCreateUpdateDeleteContact(){
     $fields = array("first_name" => "Test", "last_name" => "Cognom1 Cognom2");
     $fields_update = array("email1" => "test@omnium.cat");
+    $error_message = 'Access to this object is denied since it has been deleted or does not exist';
+
     $contact = $this->restSCRM->createContact($fields);
     $this->assertObjectHasAttribute('id', $contact);
     if (isset($contact->id)){
@@ -66,7 +68,9 @@ class ContactTest extends TestCase
       $this->assertObjectHasAttribute('email1', $updateC->entry_list);
       $this->assertEquals($fields_update['email1'], $updateC->entry_list->email1->value);
       if (isset($updateC->entry_list) && isset($updateC->entry_list->email1->value)){
-        $this->assertTrue($this->restSCRM->deleteContact($contact->id));
+        $deleteC = $this->restSCRM->deleteContact($contact->id);
+        $this->assertEquals("1", $deleteC->entry_list->deleted->value);
+        $this->assertEquals($error_message, $this->restSCRM->getContact($contact->id)['status']);
       } else {
           $this->markTestIncomplete('Update Error.');
       }
