@@ -67,39 +67,42 @@ class RestSinergiaCRM
       return ($contact);
 
   }
-  public function updateContact($objContact, $fields)
+
+  public function createContact($fields){
+    if ($this->session_id == null) {
+      return (array('status'=>'no_login'));
+    }
+    $set_entry_fields = array(
+      'session' => $this->session_id,
+      'module_name' => $this->modul_contact,
+      'name_value_list' => $fields
+    );
+
+    $result = $this->call("set_entry", $set_entry_fields);
+    return($result);
+  }
+
+  public function updateContact($id, $fields)
   {
-    //Podem passar el Object resultant de getContact -> (array)
-    //A triar:
-    //     Actualitzem tots els camps del objecte i per tant, no cal passar el llistat de camps a modificar.
-    //     o
-    //     També passem d alguna forma els camps a modificar.
-    //
-    //Crec que es mes eficient agafar els camps a modificar nomes. pero potser interesa mes laltre opcio.
-
-      print_r($objContact['id']);
-
       // Not Login yet.
       if ($this->session_id == null) {
         return (array('status'=>'no_login'));
       }
-      $set_entry_fields = array(
-        'session' => $this->session_id,
-        'module_name' => $this->modul_contact,
-        'name_value_list' => array(
-          //required
-          array("name" => "id", "value" => $objContact['id']),
-          //optional
-          array("name" => "first_name", "value" => "Test Contact Api"),
-          array("name" => "last_name", "value" => "TESTTEST_modify"),
-          //array("name" => "comentarios_c", "value" => "test"),
-          //...
-      ),
-      );
-
-      $result = $this->call("set_entry", $set_entry_fields);
-      //print_r($result);
-
+      $contact = $this->getContact($id);
+      if ($contact['id'] == $id) {
+        $set_entry_fields = array(
+          'session' => $this->session_id,
+          'module_name' => $this->modul_contact,
+          'name_value_list' => $fields,
+        );
+        $result = $this->call("set_entry", $set_entry_fields);
+        return($result);
+      }
+      return(false);
+  }
+  public function deleteContact($id){
+    // This is not implemented yet.
+    return(false);
   }
   public function getContactWithPayment($id)
   {
