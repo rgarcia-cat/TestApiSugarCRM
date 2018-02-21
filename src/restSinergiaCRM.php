@@ -88,21 +88,17 @@ class RestSinergiaCRM
       if ($this->session_id == null) {
         return (array('status'=>'no_login'));
       }
-      $contact = $this->getContact($id);
-      if ($contact['id'] == $id) {
-        $set_entry_fields = array(
-          'session' => $this->session_id,
-          'module_name' => $this->modul_contact,
-          'name_value_list' => $fields,
-        );
-        $result = $this->call("set_entry", $set_entry_fields);
-        return($result);
-      }
-      return(false);
+      $set_entry_fields = array(
+        'session' => $this->session_id,
+        'module_name' => $this->modul_contact,
+        'name_value_list' => array_merge(array("id"=>$id),$fields),
+      );
+      $result = $this->call("set_entry", $set_entry_fields);
+      return($result);
   }
   public function deleteContact($id){
     // This is not implemented yet.
-    return(false);
+    return($this->updateContact($id, array('deleted'=> 1)));
   }
   public function getContactWithPayment($id)
   {
