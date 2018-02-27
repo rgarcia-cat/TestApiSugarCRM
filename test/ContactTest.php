@@ -79,10 +79,20 @@ class ContactTest extends TestCase
     }
   }
 
+  public function testSearchByName() {
+    $sname = 'Raul Garcia Alcazar';
+    $sdni = '8#hiW.VpaVASE';
+    $salt = "8#";
 
-// Update Existent Contact
+    // Search by name
+    $contacts = $this->restSCRM->searchContact($sname);
+    $this->assertEquals($sdni, crypt($contacts->entry_list[0]->records[0]->numeroidentificacion_c->value,$salt));
 
-// Delete Contact
+    // Search by DNI
+    $contacts = $this->restSCRM->searchContact($contacts->entry_list[0]->records[0]->numeroidentificacion_c->value);
+    $this->assertEquals($sname, $contacts->entry_list[0]->records[0]->name->value);
+
+  }
 
 
 }

@@ -100,6 +100,32 @@ class RestSinergiaCRM
     // This is not implemented yet.
     return($this->updateContact($id, array('deleted'=> 1)));
   }
+  public function searchContact($search_string, $select_fields = array(), $max_registers=10000, $offset_registers=0){
+    // Not Login yet.
+    if ($this->session_id == null) {
+      return (array('status'=>'no_login'));
+    }
+    $select_fields_default = array(
+        'id',
+        'name',
+        'full',
+        'numeroidentificacion_c'
+      );
+    $search_by_module_parameters = array(
+        'session' =>  $this->session_id,
+        'search_string' => $search_string,
+        'modules' => array($this->modul_contact),
+        'offset' => $offset_registers,
+        'max_results' => $max_registers,
+        'id' => '',
+        'select_fields' => array_unique(array_merge($select_fields_default,$select_fields)),
+        'unified_search_only' => false,
+        'favorites' => false
+    );
+
+    return($this->call("search_by_module", $search_by_module_parameters));
+  }
+
   public function getContactWithPayment($id)
   {
       // Not Login yet.
